@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version '8.1.1'
+}
+
+group = 'asia.physicser'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Vanilla Minecraft
+    implementation fileTree(dir: 'libs/minecraft', includes: ['*.jar'])
+}
+
+shadowJar {
+    archiveClassifier.set('all')
+
+    configurations = [project.configurations.runtimeClasspath]
+}
+
+tasks.build {
+    dependsOn shadowJar
+}
+
+tasks.register('runClient', JavaExec) {
+    mainClass = 'Start'
+    classpath = sourceSets.test.runtimeClasspath
+    jvmArgs = ['-Djava.library.path=natives/']
+
+    workingDir = file('run/')
+}
