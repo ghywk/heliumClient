@@ -9,7 +9,9 @@ import cc.helium.value.impl.NumberValue;
 import cc.helium.visual.clickgui.ClickGui;
 import cc.helium.visual.clickgui.component.Component;
 import cc.helium.visual.clickgui.component.Frame;
-import cc.helium.visual.clickgui.component.components.sub.*;
+import cc.helium.visual.clickgui.component.components.sub.CheckboxButton;
+import cc.helium.visual.clickgui.component.components.sub.ModeButton;
+import cc.helium.visual.clickgui.component.components.sub.SliderButton;
 import cc.helium.visual.font.FontUtil;
 
 import java.awt.*;

@@ -1,6 +1,5 @@
 package cc.helium;
 
-import cc.helium.config.Config;
 import cc.helium.config.ConfigManager;
 import cc.helium.event.EventManager;
 import cc.helium.module.ModuleManager;

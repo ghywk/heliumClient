@@ -9,8 +9,6 @@ import cc.helium.value.impl.NumberValue;
 import cc.helium.visual.clickgui.ClickGui;
 import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
-
 public class ClickGUI extends Module {
     public BoolValue blur = new BoolValue("Blur", true);
     public NumberValue red = new NumberValue("Red", 163, 0, 255, 1);

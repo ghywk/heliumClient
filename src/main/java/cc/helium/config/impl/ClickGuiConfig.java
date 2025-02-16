@@ -5,9 +5,12 @@ import cc.helium.config.ConfigManager;
 import cc.helium.util.logging.LogUtil;
 import cc.helium.visual.clickgui.ClickGui;
 import cc.helium.visual.clickgui.component.Frame;
-import com.google.gson.*;
+import com.google.gson.JsonObject;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class ClickGuiConfig extends Config {
     public ClickGuiConfig() {
