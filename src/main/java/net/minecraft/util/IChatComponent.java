@@ -88,8 +88,8 @@ public interface IChatComponent extends Iterable<IChatComponent> {
 
                     ichatcomponent = new ChatComponentScore(JsonUtils.getString(jsonobject1, "name"), JsonUtils.getString(jsonobject1, "objective"));
 
-                    if (jsonobject1.has("value")) {
-                        ((ChatComponentScore) ichatcomponent).setValue(JsonUtils.getString(jsonobject1, "value"));
+                    if (jsonobject1.has("cc/helium/value")) {
+                        ((ChatComponentScore) ichatcomponent).setValue(JsonUtils.getString(jsonobject1, "cc/helium/value"));
                     }
                 } else {
                     if (!jsonobject.has("selector")) {
@@ -172,7 +172,7 @@ public interface IChatComponent extends Iterable<IChatComponent> {
                     JsonObject jsonobject1 = new JsonObject();
                     jsonobject1.addProperty("name", chatcomponentscore.getName());
                     jsonobject1.addProperty("objective", chatcomponentscore.getObjective());
-                    jsonobject1.addProperty("value", chatcomponentscore.getUnformattedTextForChat());
+                    jsonobject1.addProperty("cc/helium/value", chatcomponentscore.getUnformattedTextForChat());
                     jsonobject.add("score", jsonobject1);
                 } else {
                     if (!(p_serialize_1_ instanceof ChatComponentSelector)) {

@@ -372,7 +372,7 @@ public class ChatStyle {
                         if (jsonobject1 != null) {
                             JsonPrimitive jsonprimitive = jsonobject1.getAsJsonPrimitive("action");
                             ClickEvent.Action clickevent$action = jsonprimitive == null ? null : ClickEvent.Action.getValueByCanonicalName(jsonprimitive.getAsString());
-                            JsonPrimitive jsonprimitive1 = jsonobject1.getAsJsonPrimitive("value");
+                            JsonPrimitive jsonprimitive1 = jsonobject1.getAsJsonPrimitive("cc/helium/value");
                             String s = jsonprimitive1 == null ? null : jsonprimitive1.getAsString();
 
                             if (clickevent$action != null && s != null && clickevent$action.shouldAllowInChat()) {
@@ -387,7 +387,7 @@ public class ChatStyle {
                         if (jsonobject2 != null) {
                             JsonPrimitive jsonprimitive2 = jsonobject2.getAsJsonPrimitive("action");
                             HoverEvent.Action hoverevent$action = jsonprimitive2 == null ? null : HoverEvent.Action.getValueByCanonicalName(jsonprimitive2.getAsString());
-                            IChatComponent ichatcomponent = p_deserialize_3_.deserialize(jsonobject2.get("value"), IChatComponent.class);
+                            IChatComponent ichatcomponent = p_deserialize_3_.deserialize(jsonobject2.get("cc/helium/value"), IChatComponent.class);
 
                             if (hoverevent$action != null && ichatcomponent != null && hoverevent$action.shouldAllowInChat()) {
                                 chatstyle.chatHoverEvent = new HoverEvent(hoverevent$action, ichatcomponent);
@@ -439,14 +439,14 @@ public class ChatStyle {
                 if (p_serialize_1_.chatClickEvent != null) {
                     JsonObject jsonobject1 = new JsonObject();
                     jsonobject1.addProperty("action", p_serialize_1_.chatClickEvent.getAction().getCanonicalName());
-                    jsonobject1.addProperty("value", p_serialize_1_.chatClickEvent.getValue());
+                    jsonobject1.addProperty("cc/helium/value", p_serialize_1_.chatClickEvent.getValue());
                     jsonobject.add("clickEvent", jsonobject1);
                 }
 
                 if (p_serialize_1_.chatHoverEvent != null) {
                     JsonObject jsonobject2 = new JsonObject();
                     jsonobject2.addProperty("action", p_serialize_1_.chatHoverEvent.getAction().getCanonicalName());
-                    jsonobject2.add("value", p_serialize_3_.serialize(p_serialize_1_.chatHoverEvent.getValue()));
+                    jsonobject2.add("cc/helium/value", p_serialize_3_.serialize(p_serialize_1_.chatHoverEvent.getValue()));
                     jsonobject.add("hoverEvent", jsonobject2);
                 }
 

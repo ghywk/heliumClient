@@ -107,8 +107,8 @@ public class StatisticsFile extends StatFileWriter {
                     } else if (entry.getValue().isJsonObject()) {
                         JsonObject jsonobject1 = entry.getValue().getAsJsonObject();
 
-                        if (jsonobject1.has("value") && jsonobject1.get("value").isJsonPrimitive() && jsonobject1.get("value").getAsJsonPrimitive().isNumber()) {
-                            tupleintjsonserializable.setIntegerValue(jsonobject1.getAsJsonPrimitive("value").getAsInt());
+                        if (jsonobject1.has("cc/helium/value") && jsonobject1.get("cc/helium/value").isJsonPrimitive() && jsonobject1.get("cc/helium/value").getAsJsonPrimitive().isNumber()) {
+                            tupleintjsonserializable.setIntegerValue(jsonobject1.getAsJsonPrimitive("cc/helium/value").getAsInt());
                         }
 
                         if (jsonobject1.has("progress") && statbase.func_150954_l() != null) {
@@ -139,7 +139,7 @@ public class StatisticsFile extends StatFileWriter {
         for (Entry<StatBase, TupleIntJsonSerializable> entry : p_150880_0_.entrySet()) {
             if (entry.getValue().getJsonSerializableValue() != null) {
                 JsonObject jsonobject1 = new JsonObject();
-                jsonobject1.addProperty("value", Integer.valueOf(entry.getValue().getIntegerValue()));
+                jsonobject1.addProperty("cc/helium/value", Integer.valueOf(entry.getValue().getIntegerValue()));
 
                 try {
                     jsonobject1.add("progress", entry.getValue().getJsonSerializableValue().getSerializableElement());

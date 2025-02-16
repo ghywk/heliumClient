@@ -1,5 +1,6 @@
 package net.minecraft.client;
 
+import cc.helium.Client;
 import com.google.common.collect.*;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -131,7 +132,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     public int displayWidth;
     public int displayHeight;
     private boolean connectedToRealms = false;
-    private final Timer timer = new Timer(20.0F);
+    public final Timer timer = new Timer(20.0F);
     private final PlayerUsageSnooper usageSnooper = new PlayerUsageSnooper("client", this, MinecraftServer.getCurrentTimeMillis());
     public WorldClient theWorld;
     public RenderGlobal renderGlobal;
@@ -357,6 +358,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         GlStateManager.loadIdentity();
         GlStateManager.matrixMode(5888);
         this.checkGLError("Startup");
+        new Client();
+        Client.getInstance().onStart();
         this.textureMapBlocks = new TextureMap("textures");
         this.textureMapBlocks.setMipmapLevels(this.gameSettings.mipmapLevels);
         this.renderEngine.loadTickableTexture(TextureMap.locationBlocksTexture, this.textureMapBlocks);
@@ -739,6 +742,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     public void shutdownMinecraftApplet() {
         try {
             this.stream.shutdownStream();
+            Client.getInstance().onShut();
             logger.info("Stopping!");
 
             try {
@@ -1407,6 +1411,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
                 this.dispatchKeypresses();
 
                 if (Keyboard.getEventKeyState()) {
+                    Client.getInstance().moduleManager.onKey(k);
                     if (k == 62 && this.entityRenderer != null) {
                         this.entityRenderer.switchUseShader();
                     }

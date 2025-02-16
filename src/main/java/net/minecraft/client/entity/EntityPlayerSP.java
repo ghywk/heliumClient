@@ -1,5 +1,7 @@
 package net.minecraft.client.entity;
 
+import cc.helium.Client;
+import cc.helium.event.impl.update.UpdateEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -75,6 +77,9 @@ public class EntityPlayerSP extends AbstractClientPlayer {
     }
 
     public void onUpdate() {
+        Client.getInstance().
+                eventManager.call(
+                new UpdateEvent());
         if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ))) {
             super.onUpdate();
 

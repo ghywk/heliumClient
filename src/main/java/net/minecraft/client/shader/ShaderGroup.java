@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ShaderGroup {
-    private final Framebuffer mainFramebuffer;
+    public final Framebuffer mainFramebuffer;
     private final IResourceManager resourceManager;
     private final String shaderGroupName;
-    private final List<Shader> listShaders = Lists.newArrayList();
+    public final List<Shader> listShaders = Lists.newArrayList();
     private final Map<String, Framebuffer> mapFramebuffers = Maps.newHashMap();
     private final List<Framebuffer> listFramebuffers = Lists.newArrayList();
     private Matrix4f projectionMatrix;
@@ -210,7 +210,7 @@ public class ShaderGroup {
 
             for (JsonElement jsonelement : JsonUtils.getJsonArray(jsonobject, "values")) {
                 try {
-                    afloat[i] = JsonUtils.getFloat(jsonelement, "value");
+                    afloat[i] = JsonUtils.getFloat(jsonelement, "cc/helium/value");
                 } catch (Exception exception) {
                     JsonException jsonexception = JsonException.func_151379_a(exception);
                     jsonexception.func_151380_a("values[" + i + "]");

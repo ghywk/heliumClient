@@ -67,6 +67,10 @@ public class KeyBinding implements Comparable<KeyBinding> {
         keybindSet.add(category);
     }
 
+    public void setPressed(boolean pressed) {
+        this.pressed = pressed;
+    }
+
     public boolean isKeyDown() {
         return this.pressed;
     }

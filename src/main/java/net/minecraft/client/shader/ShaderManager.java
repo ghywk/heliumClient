@@ -281,7 +281,7 @@ public class ShaderManager {
 
             for (JsonElement jsonelement : jsonarray) {
                 try {
-                    afloat[k] = JsonUtils.getFloat(jsonelement, "value");
+                    afloat[k] = JsonUtils.getFloat(jsonelement, "cc/helium/value");
                 } catch (Exception exception) {
                     JsonException jsonexception = JsonException.func_151379_a(exception);
                     jsonexception.func_151380_a("values[" + k + "]");
