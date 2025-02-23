@@ -14,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 
 public class Client {
     public String name = "Helium";
-    public String version = "1.0.0";
+    public String version = "1.0.1";
+    public String edit = "pre1";
     private static Client instance;
     public static Logger logger = LogManager.getLogger("Helium Client");
 
