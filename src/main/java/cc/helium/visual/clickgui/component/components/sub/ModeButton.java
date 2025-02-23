@@ -3,7 +3,7 @@ package cc.helium.visual.clickgui.component.components.sub;
 import cc.helium.value.impl.ModeValue;
 import cc.helium.visual.clickgui.component.Component;
 import cc.helium.visual.clickgui.component.components.Button;
-import cc.helium.visual.font.FontHelper;
+import cc.helium.visual.font.FontManager;
 import net.minecraft.client.gui.Gui;
 import org.lwjgl.opengl.GL11;
 
@@ -41,8 +41,8 @@ public class ModeButton extends Component {
 		GL11.glPushMatrix();
 		GL11.glScalef(0.75f,0.75f, 0.75f);
 
-        FontHelper.verdana32.drawString(this.hovered ? "§7" + set.getName() + " " : set.getName() + " ", (parent.parent.getX() + 7) * 1.33333333333f, (parent.parent.getY() + offset + 2) * 1.33333333333f, Color.white);
-		FontHelper.verdana32.drawString(set.getValue(), (parent.parent.getX() + 86) * 1.33333333333f - FontHelper.verdana32.getStringWidth(set.getValue()), (parent.parent.getY() + offset + 2) * 1.33333333333f, Color.white);
+		FontManager.arial18.drawString(this.hovered ? "§7" + set.getName() + " " : set.getName() + " ", (parent.parent.getX() + 7) * 1.33333333333f, (parent.parent.getY() + offset + 2) * 1.33333333333f, Color.white.getRGB());
+		FontManager.arial18.drawString(set.getValue(), (parent.parent.getX() + 86) * 1.33333333333f - FontManager.arial18.getStringWidth(set.getValue()), (parent.parent.getY() + offset + 2) * 1.33333333333f, Color.white.getRGB());
 
         GL11.glPopMatrix();
 	}

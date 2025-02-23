@@ -93,7 +93,7 @@ public class GuiPlayerTabOverlay extends Gui {
         List<String> list2 = null;
 
         if (this.header != null) {
-            list1 = this.mc.fontRendererObj.listFormattedStringToWidth(this.header.getFormattedText(), width - 50);
+            list1 = this.mc.fontRendererObj.listFormattedStringToWidth(this.header.getFormattedText().replace("花雨庭", "KKCraft").replace("❀", "⌨").replace("www.mchyt.com", "www.quickmacro.sb"), width - 50);
 
             for (String s : list1) {
                 l1 = Math.max(l1, this.mc.fontRendererObj.getStringWidth(s));

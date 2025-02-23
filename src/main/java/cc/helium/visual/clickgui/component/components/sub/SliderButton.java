@@ -4,7 +4,7 @@ import cc.helium.util.render.RenderUtil;
 import cc.helium.value.impl.NumberValue;
 import cc.helium.visual.clickgui.component.Component;
 import cc.helium.visual.clickgui.component.components.Button;
-import cc.helium.visual.font.FontHelper;
+import cc.helium.visual.font.FontManager;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -42,8 +42,8 @@ public class SliderButton extends Component {
 
 		GL11.glPushMatrix();
 		GL11.glScalef(0.75f,0.75f, 0.75f);
-        FontHelper.verdana32.drawString(this.hovered ? "§7" + this.set.getName() + " " : this.set.getName() + " ", (parent.parent.getX() * 1.333333333333f + 9), (parent.parent.getY() + offset + 2) * 1.33333333333333f, Color.white);
-		FontHelper.verdana32.drawString(this.hovered ? "§7" + this.set.getValue() : String.valueOf(this.set.getValue()), (parent.parent.getX() + 86) * 1.3333333333f - FontHelper.verdana32.getStringWidth(this.hovered ? "§7" + this.set.getValue() : String.valueOf(this.set.getValue())), (parent.parent.getY() + offset + 2) * 1.3333333333f, Color.white);
+		FontManager.arial18.drawString(this.hovered ? "§7" + this.set.getName() + " " : this.set.getName() + " ", (parent.parent.getX() * 1.333333333333f + 9), (parent.parent.getY() + offset + 2) * 1.33333333333333f, Color.white.getRGB());
+		FontManager.arial18.drawString(this.hovered ? "§7" + this.set.getValue() : String.valueOf(this.set.getValue()), (parent.parent.getX() + 86) * 1.3333333333f - FontManager.arial18.getStringWidth(this.hovered ? "§7" + this.set.getValue() : String.valueOf(this.set.getValue())), (parent.parent.getY() + offset + 2) * 1.3333333333f, Color.white.getRGB());
 
         GL11.glPopMatrix();
 	}

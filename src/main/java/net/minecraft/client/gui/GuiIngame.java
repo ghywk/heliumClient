@@ -1,5 +1,7 @@
 package net.minecraft.client.gui;
 
+import cc.helium.Client;
+import cc.helium.event.impl.render.Render2DEvent;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -111,6 +113,8 @@ public class GuiIngame extends Gui {
                 this.renderPortal(f, scaledresolution);
             }
         }
+
+        Client.getInstance().eventManager.call(new Render2DEvent());
 
         if (this.mc.playerController.isSpectator()) {
             this.spectatorGui.renderTooltip(scaledresolution, partialTicks);
@@ -233,6 +237,7 @@ public class GuiIngame extends Gui {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(4.0F, 4.0F, 4.0F);
                 int j2 = i2 << 24 & -16777216;
+                this.displayedTitle = org.apache.commons.lang3.StringUtils.replace(this.displayedTitle, "花雨庭", "KKCraft");
                 this.getFontRenderer().drawString(this.displayedTitle, (float) (-this.getFontRenderer().getStringWidth(this.displayedTitle) / 2), -10.0F, 16777215 | j2, true);
                 GlStateManager.popMatrix();
                 GlStateManager.pushMatrix();
@@ -486,7 +491,7 @@ public class GuiIngame extends Gui {
             this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 553648127);
 
             if (j == collection.size()) {
-                String s3 = objective.getDisplayName();
+                String s3 = org.apache.commons.lang3.StringUtils.replace(org.apache.commons.lang3.StringUtils.replace(objective.getDisplayName(), "花雨庭", "KKCraft"), "§c✿", "§c¥");
                 drawRect(l1 - 2, k - this.getFontRenderer().FONT_HEIGHT - 1, l, k - 1, 1610612736);
                 drawRect(l1 - 2, k - 1, l, k, 1342177280);
                 this.getFontRenderer().drawString(s3, l1 + i / 2 - this.getFontRenderer().getStringWidth(s3) / 2, k - this.getFontRenderer().FONT_HEIGHT, 553648127);

@@ -4,7 +4,7 @@ import cc.helium.config.ConfigManager;
 import cc.helium.event.EventManager;
 import cc.helium.module.ModuleManager;
 import cc.helium.visual.clickgui.ClickGui;
-import cc.helium.visual.font.FontHelper;
+import cc.helium.visual.font.FontManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,7 +33,6 @@ public class Client {
         configManager = new ConfigManager();
 
         new ClickGui();
-        FontHelper.loadFonts();
         configManager.loadConfigs();
 
         eventManager.register(moduleManager);

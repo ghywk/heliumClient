@@ -12,7 +12,7 @@ import cc.helium.visual.clickgui.component.Frame;
 import cc.helium.visual.clickgui.component.components.sub.CheckboxButton;
 import cc.helium.visual.clickgui.component.components.sub.ModeButton;
 import cc.helium.visual.clickgui.component.components.sub.SliderButton;
-import cc.helium.visual.font.FontUtil;
+import cc.helium.visual.font.FontManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -79,7 +79,10 @@ public class Button extends Component {
 			RenderUtil.rect(parent.getX(), this.parent.getY() + this.offset, parent.getX() + parent.getWidth(), this.parent.getY() + height + this.offset, 0x30000000);
 		}
 
-		FontUtil.drawTotalCenteredStringWithShadowSFL(this.mod.isEnable() ? this.mod.getName() : this.isHovered ? "§7" + this.mod.getName() : "§f" + this.mod.getName(), parent.getX() + (float) parent.getWidth() / 2, (parent.getY() + offset + 7) - 2, new Color(255, 233, 181));
+		String text = this.mod.isEnable() ? this.mod.getName() : this.isHovered ? "§7" + this.mod.getName() : "§f" + this.mod.getName();
+		float x = parent.getX() + (float) parent.getWidth() / 2;
+		int y = (parent.getY() + offset + 7) - 2;
+		FontManager.sf_light18.drawString(text, x - (double) FontManager.sf_light18.getStringWidth(text) / 2, y - FontManager.sf_light18.getHeight() / 2F, new Color(255, 233, 181).getRGB());
 
 		if(this.open) {
 			if (!this.subcomponents.isEmpty()) {

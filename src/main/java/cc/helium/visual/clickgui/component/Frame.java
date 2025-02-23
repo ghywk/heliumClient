@@ -6,13 +6,12 @@ import cc.helium.module.Module;
 import cc.helium.module.impl.render.ClickGUI;
 import cc.helium.util.render.RenderUtil;
 import cc.helium.visual.clickgui.component.components.Button;
-import cc.helium.visual.font.FontUtil;
+import cc.helium.visual.font.FontManager;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Frame {
-
 	public final ArrayList<Component> components;
 	public final Category category;
 	public boolean open;
@@ -72,7 +71,10 @@ public class Frame {
 		int color = new Color(cgui.red.getValue().intValue(), cgui.green.getValue().intValue(), cgui.blue.getValue().intValue(), cgui.blue.getValue().intValue()).getRGB();
 		RenderUtil.rect(this.x - 2, this.y - 2, this.x + this.width + 2, this.y + this.barHeight, color);
 
-		FontUtil.drawTotalCenteredStringWithShadowVerdana(this.category.name(), (this.x + (float) this.width / 2), (this.y + 7) - 3, Color.WHITE);
+		String text = this.category.name();
+		float y1 = (this.y + 7) - 3;
+		float x1 = this.x + (float) this.width / 2;
+		FontManager.sf_light20.drawString(text, x1 - (double) FontManager.sf_light20.getStringWidth(text) / 2, y1 - FontManager.sf_light20.getHeight() / 2F, Color.white.getRGB());
 
         for (Component component : this.components) {
 			if (this.open) {

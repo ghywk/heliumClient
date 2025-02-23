@@ -3,7 +3,7 @@ package cc.helium.visual.clickgui.component.components.sub;
 import cc.helium.value.impl.BoolValue;
 import cc.helium.visual.clickgui.component.Component;
 import cc.helium.visual.clickgui.component.components.Button;
-import cc.helium.visual.font.FontHelper;
+import cc.helium.visual.font.FontManager;
 import net.minecraft.client.gui.Gui;
 import org.lwjgl.opengl.GL11;
 
@@ -36,7 +36,7 @@ public class CheckboxButton extends Component {
 		GL11.glScalef(0.75f,0.75f, 0.75f);
 
 
-		FontHelper.verdana32.drawString(this.hovered ? "§7" + this.op.getName() : this.op.getName(), (parent.parent.getX() + 3) * 1.3333333333f + 5, (parent.parent.getY() + offset + 2) * 1.3333333333f, new Color(255, 255, 255));
+		FontManager.arial18.drawString(this.hovered ? "§7" + this.op.getName() : this.op.getName(), (parent.parent.getX() + 3) * 1.3333333333f + 5, (parent.parent.getY() + offset + 2) * 1.3333333333f, new Color(255, 255, 255).getRGB());
 
         GL11.glPopMatrix();
 		Gui.drawRect(parent.parent.getX() + parent.parent.getWidth() - 2, parent.parent.getY() + offset + 3, parent.parent.getX() + parent.parent.getWidth() - 8, parent.parent.getY() + offset + 9, 0x88999999);

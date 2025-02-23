@@ -263,7 +263,7 @@ public class FontRenderer implements IResourceManagerReloadListener {
             return (f1 - f) / 2.0F + 1.0F;
         }
     }
-
+    
     public int drawStringWithShadow(String text, float x, float y, int color) {
         return this.drawString(text, x, y, color, true);
     }
@@ -272,6 +272,7 @@ public class FontRenderer implements IResourceManagerReloadListener {
         return this.drawString(text, (float) x, (float) y, color, false);
     }
 
+    
     public int drawString(String text, float x, float y, int color, boolean dropShadow) {
         this.enableAlpha();
 
@@ -492,6 +493,7 @@ public class FontRenderer implements IResourceManagerReloadListener {
         }
     }
 
+    
     public int getStringWidth(String text) {
         if (text == null) {
             return 0;

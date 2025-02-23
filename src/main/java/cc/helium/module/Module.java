@@ -3,6 +3,8 @@ package cc.helium.module;
 import cc.helium.Client;
 import cc.helium.util.Util;
 import cc.helium.value.Value;
+import cc.helium.visual.hud.notifications.NotificationManager;
+import cc.helium.visual.hud.notifications.NotificationType;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -48,9 +50,11 @@ public class Module implements Util {
 
         if (this.enable) {
             Client.getInstance().eventManager.register(this);
+            NotificationManager.post(NotificationType.INFO, name, " Enabled");
             this.onEnable();
         } else {
             Client.getInstance().eventManager.unregister(this);
+            NotificationManager.post(NotificationType.INFO, name, " Disabled");
             this.onDisable();
         }
     }
