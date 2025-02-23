@@ -1,11 +1,13 @@
 package cc.helium.module;
 
+import cc.helium.event.api.annotations.TargetEvent;
+import cc.helium.event.impl.update.UpdateEvent;
 import cc.helium.module.impl.movement.Sprint;
 import cc.helium.module.impl.render.ClickGUI;
 import cc.helium.module.impl.render.HUDModule;
-import cc.helium.module.impl.render.TextEditor;
+import cc.helium.util.Util;
 import cc.helium.util.logging.LogUtil;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.client.gui.ScaledResolution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Kev1nLeft
  */
 
-public class ModuleManager {
+public class ModuleManager implements Util {
     private final List<Module> modules = new ArrayList<>();
 
     public ModuleManager() {
@@ -70,7 +72,6 @@ public class ModuleManager {
         add(new Sprint());
         add(new ClickGUI());
         add(new HUDModule());
-        add(new TextEditor());
 
         LogUtil.log_info("Module Loaded");
     }

@@ -71,7 +71,7 @@ public class Frame {
 		int color = new Color(cgui.red.getValue().intValue(), cgui.green.getValue().intValue(), cgui.blue.getValue().intValue(), cgui.blue.getValue().intValue()).getRGB();
 		RenderUtil.rect(this.x - 2, this.y - 2, this.x + this.width + 2, this.y + this.barHeight, color);
 
-		String text = this.category.name();
+		String text = this.category.getTranslatedName();
 		float y1 = (this.y + 7) - 3;
 		float x1 = this.x + (float) this.width / 2;
 		FontManager.sf_light20.drawString(text, x1 - (double) FontManager.sf_light20.getStringWidth(text) / 2, y1 - FontManager.sf_light20.getHeight() / 2F, Color.white.getRGB());

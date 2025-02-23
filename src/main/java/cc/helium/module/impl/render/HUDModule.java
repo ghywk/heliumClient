@@ -20,10 +20,10 @@ import java.awt.*;
  */
 
 public class HUDModule extends Module {
-    private static final NumberValue red = new NumberValue("ClientRed", 163, 0, 255, 1);
-    private static final NumberValue blue = new NumberValue("ClientBlue", 223, 0, 255, 1);
-    private static final NumberValue green = new NumberValue("ClientGreen", 255, 0, 255, 1);
-    private static final NumberValue alpha = new NumberValue("ClientAlpha", 220, 0, 255, 1);
+    private static final NumberValue red = new NumberValue("Client-Red", 163, 0, 255, 1);
+    private static final NumberValue blue = new NumberValue("Client-Blue", 223, 0, 255, 1);
+    private static final NumberValue green = new NumberValue("Client-Green", 255, 0, 255, 1);
+    private static final NumberValue alpha = new NumberValue("Client-Alpha", 220, 0, 255, 1);
     public static BoolValue notificationsValue = new BoolValue("Notifications", true);
     private final NumberValue time = new NumberValue("Noti-Time", 2, 1, 10, 0.5);
     private final BoolValue notiGlow = new BoolValue("Noti-Glow", false);
@@ -34,7 +34,7 @@ public class HUDModule extends Module {
     }
 
     @TargetEvent
-    public void onRender2D(Render2DEvent event) {
+    public void onRender2D(Render2DEvent ignored) {
         if (!notificationsValue.getValue() || mc.thePlayer == null) return;
         renderEffects();
         render();
@@ -73,7 +73,6 @@ public class HUDModule extends Module {
             notification.drawSuicideX(x, y, notificationWidth, notificationHeight, (float) animation.getOutput().floatValue());
 
             yOffset += (notificationHeight + actualOffset) * animation.getOutput().floatValue();
-
         }
     }
 

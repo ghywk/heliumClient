@@ -79,7 +79,7 @@ public class Button extends Component {
 			RenderUtil.rect(parent.getX(), this.parent.getY() + this.offset, parent.getX() + parent.getWidth(), this.parent.getY() + height + this.offset, 0x30000000);
 		}
 
-		String text = this.mod.isEnable() ? this.mod.getName() : this.isHovered ? "§7" + this.mod.getName() : "§f" + this.mod.getName();
+		String text = this.mod.isEnable() ? this.mod.getTranslatedName() : this.isHovered ? "§7" + this.mod.getTranslatedName() : "§f" + this.mod.getTranslatedName();
 		float x = parent.getX() + (float) parent.getWidth() / 2;
 		int y = (parent.getY() + offset + 7) - 2;
 		FontManager.sf_light18.drawString(text, x - (double) FontManager.sf_light18.getStringWidth(text) / 2, y - FontManager.sf_light18.getHeight() / 2F, new Color(255, 233, 181).getRGB());

@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 
 public class ClickGuiConfig extends Config {
     public ClickGuiConfig() {
-        super("clickGui", "clickGui.json");
+        super("clickgui", "clickgui.json");
     }
 
     public void saveConfig() {
@@ -35,7 +35,6 @@ public class ClickGuiConfig extends Config {
                 pw.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                LogUtil.log_error("Failed to write " + name + " config.");
             }
 
         } catch (Exception e) {

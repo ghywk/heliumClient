@@ -53,7 +53,7 @@ public class ModuleConfig extends Config {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Failed to load " + name + " config.");
+            e.printStackTrace();
         }
     }
 
@@ -78,7 +78,6 @@ public class ModuleConfig extends Config {
             pw.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            LogUtil.log_error("Failed to write " + name + " config.");
         }
     }
 

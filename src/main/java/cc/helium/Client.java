@@ -3,6 +3,7 @@ package cc.helium;
 import cc.helium.config.ConfigManager;
 import cc.helium.event.EventManager;
 import cc.helium.module.ModuleManager;
+import cc.helium.util.lang.Languages;
 import cc.helium.visual.clickgui.ClickGui;
 import cc.helium.visual.font.FontManager;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +23,8 @@ public class Client {
     public EventManager eventManager;
     public ModuleManager moduleManager;
     public ConfigManager configManager;
+
+    public Languages lang;
 
     public Client() {
         instance = this;

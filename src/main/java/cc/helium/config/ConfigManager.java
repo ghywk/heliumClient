@@ -1,6 +1,7 @@
 package cc.helium.config;
 
 import cc.helium.config.impl.ClickGuiConfig;
+import cc.helium.config.impl.LangConfig;
 import cc.helium.config.impl.ModuleConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,6 +42,7 @@ public class ConfigManager {
     private void registerConfigs() {
         configList.add(new ModuleConfig());
         configList.add(new ClickGuiConfig());
+        configList.add(new LangConfig());
     }
 
     public void loadConfigs() {

@@ -2,6 +2,7 @@ package cc.helium.module;
 
 import cc.helium.Client;
 import cc.helium.util.Util;
+import cc.helium.util.lang.LangUtil;
 import cc.helium.value.Value;
 import cc.helium.visual.hud.notifications.NotificationManager;
 import cc.helium.visual.hud.notifications.NotificationType;
@@ -50,17 +51,25 @@ public class Module implements Util {
 
         if (this.enable) {
             Client.getInstance().eventManager.register(this);
-            NotificationManager.post(NotificationType.INFO, name, " Enabled");
             this.onEnable();
+            if (mc.thePlayer != null) {
+                NotificationManager.post(NotificationType.INFO, getTranslatedName(), " " + LangUtil.getTranslation("module.state.enable"));
+            }
         } else {
             Client.getInstance().eventManager.unregister(this);
-            NotificationManager.post(NotificationType.INFO, name, " Disabled");
+            if (mc.thePlayer != null) {
+                NotificationManager.post(NotificationType.INFO, getTranslatedName(), " " + LangUtil.getTranslation("module.state.disable"));
+            }
             this.onDisable();
         }
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getTranslatedName() {
+        return LangUtil.getTranslation("module.name." + name.toLowerCase());
     }
 
     public Category getCategory() {
