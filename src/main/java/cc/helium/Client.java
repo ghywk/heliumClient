@@ -4,8 +4,9 @@ import cc.helium.config.ConfigManager;
 import cc.helium.event.EventManager;
 import cc.helium.module.ModuleManager;
 import cc.helium.util.lang.Languages;
+import cc.helium.viafix.Fixer;
 import cc.helium.visual.clickgui.ClickGui;
-import cc.helium.visual.font.FontManager;
+import de.florianmichael.viamcp.ViaMCP;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 public class Client {
     public String name = "Helium";
     public String version = "1.0.1";
-    public String edit = "pre1";
+    public String edit = "pre3";
     private static Client instance;
     public static Logger logger = LogManager.getLogger("Helium Client");
 
@@ -37,14 +38,26 @@ public class Client {
         configManager = new ConfigManager();
 
         new ClickGui();
+        new Fixer();
         configManager.loadConfigs();
 
         eventManager.register(moduleManager);
+
+        this.startViaMCP();
     }
 
     public void onShut() {
         logger.info("Shutting.");
         configManager.saveConfigs();
+    }
+
+    private void startViaMCP() {
+        try {
+            ViaMCP.create();
+            ViaMCP.INSTANCE.initAsyncSlider();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static Client getInstance() {

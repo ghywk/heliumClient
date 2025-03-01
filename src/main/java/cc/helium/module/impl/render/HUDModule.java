@@ -26,7 +26,6 @@ public class HUDModule extends Module {
     private static final NumberValue alpha = new NumberValue("Client-Alpha", 220, 0, 255, 1);
     public static BoolValue notificationsValue = new BoolValue("Notifications", true);
     private final NumberValue time = new NumberValue("Noti-Time", 2, 1, 10, 0.5);
-    private final BoolValue notiGlow = new BoolValue("Noti-Glow", false);
 
     public static Color clientColor = new Color(red.getValue().intValue(), green.getValue().intValue(), blue.getValue().intValue(), alpha.getValue().intValue());
     public HUDModule() {
@@ -36,15 +35,14 @@ public class HUDModule extends Module {
     @TargetEvent
     public void onRender2D(Render2DEvent ignored) {
         if (!notificationsValue.getValue() || mc.thePlayer == null) return;
-        renderEffects();
         render();
     }
 
     public void render() {
         float yOffset = 0;
-        int notificationHeight = 0;
+        int notificationHeight;
         int notificationWidth;
-        int actualOffset = 0;
+        int actualOffset;
         ScaledResolution sr = new ScaledResolution(mc);
 
         NotificationManager.setToggleTime(time.getValue().floatValue());
@@ -70,40 +68,7 @@ public class HUDModule extends Module {
             x = sr.getScaledWidth() - (notificationWidth + 5);
             y = sr.getScaledHeight() - (yOffset + 18 + notificationHeight);
 
-            notification.drawSuicideX(x, y, notificationWidth, notificationHeight, (float) animation.getOutput().floatValue());
-
-            yOffset += (notificationHeight + actualOffset) * animation.getOutput().floatValue();
-        }
-    }
-
-    public void renderEffects() {
-        float yOffset = 0;
-        int notificationHeight = 0;
-        int notificationWidth;
-        int actualOffset = 0;
-        ScaledResolution sr = new ScaledResolution(mc);
-
-        for (Notification notification : NotificationManager.getNotifications()) {
-            Animation animation = notification.getAnimation();
-            animation.setDirection(notification.getTimerUtil().finished((long) notification.getTime()) ? Direction.BACKWARDS : Direction.FORWARDS);
-
-            if (animation.finished(Direction.BACKWARDS)) {
-                NotificationManager.getNotifications().remove(notification);
-                continue;
-            }
-
-            float x, y;
-
-            actualOffset = 3;
-            notificationHeight = 16;
-            String editTitle = notification.getNotificationType().name() + ": " + notification.getTitle() + notification.getDescription();
-
-            notificationWidth = (int) FontManager.verdana18.getStringWidth(editTitle) + 5;
-
-            x = sr.getScaledWidth() - (notificationWidth + 5);
-            y = sr.getScaledHeight() - (yOffset + 18 + notificationHeight);
-
-            notification.blurSuicideX(x - 5, y, notificationWidth, notificationHeight, animation.getOutput().floatValue());
+            notification.drawSuicideX(x, y, notificationWidth, notificationHeight, animation.getOutput().floatValue());
 
             yOffset += (notificationHeight + actualOffset) * animation.getOutput().floatValue();
         }

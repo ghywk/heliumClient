@@ -3,6 +3,8 @@ package net.minecraft.entity;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
+import de.florianmichael.vialoadingbase.ViaLoadingBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -1372,15 +1374,17 @@ public abstract class EntityLivingBase extends Entity {
             this.motionZ *= 0.98D;
         }
 
-        if (Math.abs(this.motionX) < 0.005D) {
+        double var = ViaLoadingBase.getInstance().getTargetVersion().newerThan(ProtocolVersion.v1_8) ? 0.003D : 0.005D;
+
+        if (Math.abs(this.motionX) < var) {
             this.motionX = 0.0D;
         }
 
-        if (Math.abs(this.motionY) < 0.005D) {
+        if (Math.abs(this.motionY) < var) {
             this.motionY = 0.0D;
         }
 
-        if (Math.abs(this.motionZ) < 0.005D) {
+        if (Math.abs(this.motionZ) < var) {
             this.motionZ = 0.0D;
         }
 

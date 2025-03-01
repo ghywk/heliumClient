@@ -3,7 +3,6 @@ package cc.helium.visual.hud.notifications;
 import cc.helium.util.Util;
 import cc.helium.util.animation.Animation;
 import cc.helium.util.animation.impl.DecelerateAnimation;
-import cc.helium.util.render.RenderUtil;
 import cc.helium.util.time.StopWatch;
 import cc.helium.visual.font.FontManager;
 
@@ -36,12 +35,6 @@ public class Notification implements Util {
         String editTitle = notificationType.name() + ": " + getTitle() + getDescription();
 
         FontManager.verdana18.drawString(editTitle, x, (int) (yVal + FontManager.verdana18.getMiddleOfBox(heightVal)), applyOpacity(Color.WHITE, animation - .5f).getRGB());
-    }
-
-    public void blurSuicideX(float x, float y, float width, float height, float animation) {
-        float heightVal = height * animation <= 6 ? 0 : height * animation;
-        float yVal = (y + height) - heightVal;
-        RenderUtil.drawRound(x, yVal, width + 5, heightVal, 3, new Color(0, 0, 0, 100));
     }
 
     public NotificationType getNotificationType() {

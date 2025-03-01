@@ -1,5 +1,7 @@
 package net.minecraft.block;
 
+import cc.helium.Client;
+import cc.helium.event.impl.world.BlockAABBEvent;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
@@ -315,6 +317,11 @@ public class Block {
 
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity) {
         AxisAlignedBB axisalignedbb = this.getCollisionBoundingBox(worldIn, pos, state);
+
+        final BlockAABBEvent event = new BlockAABBEvent(this, worldIn, pos, axisalignedbb, mask);
+        Client.getInstance().eventManager.call(event);
+
+        if (event.isCancelled()) return;
 
         if (axisalignedbb != null && mask.intersectsWith(axisalignedbb)) {
             list.add(axisalignedbb);
