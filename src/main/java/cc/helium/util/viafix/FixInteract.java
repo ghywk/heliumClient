@@ -1,4 +1,4 @@
-package cc.helium.viafix;
+package cc.helium.util.viafix;
 
 import cc.helium.event.api.annotations.Priority;
 import cc.helium.event.api.annotations.TargetEvent;
@@ -6,9 +6,7 @@ import cc.helium.event.impl.packet.PacketSendEvent;
 import cc.helium.util.Util;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 
 /**
  * @author Kev1nLeft

@@ -1,7 +1,6 @@
-package cc.helium.viafix;
+package cc.helium.util.viafix;
 
 import cc.helium.event.api.annotations.TargetEvent;
-import cc.helium.event.impl.packet.PacketSendEvent;
 import cc.helium.event.impl.update.UpdateEvent;
 import cc.helium.util.Util;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;

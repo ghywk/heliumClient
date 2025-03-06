@@ -1,7 +1,10 @@
 package net.minecraft.client.entity;
 
 import cc.helium.Client;
+import cc.helium.event.impl.update.MotionEvent;
 import cc.helium.event.impl.update.UpdateEvent;
+import cc.helium.util.vector.Vector2f;
+import de.florianmichael.vialoadingbase.ViaLoadingBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -77,22 +80,21 @@ public class EntityPlayerSP extends AbstractClientPlayer {
     }
 
     public void onUpdate() {
-        Client.getInstance().
-                eventManager.call(
-                new UpdateEvent());
         if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ))) {
+            Client.getInstance().
+                    eventManager.call(
+                            new UpdateEvent());
+
             super.onUpdate();
 
-            if (this.isRiding()) {
-                this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(this.rotationYaw, this.rotationPitch, this.onGround));
-                this.sendQueue.addToSendQueue(new C0CPacketInput(this.moveStrafing, this.moveForward, this.movementInput.jump, this.movementInput.sneak));
-            } else {
-                this.onUpdateWalkingPlayer();
-            }
+            this.onUpdateWalkingPlayer();
         }
     }
 
     public void onUpdateWalkingPlayer() {
+        MotionEvent event = new MotionEvent(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround);
+        Client.getInstance().eventManager.call(event);
+
         boolean flag = this.isSprinting();
 
         if (flag != this.serverSprintState) {
@@ -118,43 +120,61 @@ public class EntityPlayerSP extends AbstractClientPlayer {
         }
 
         if (this.isCurrentViewEntity()) {
-            double d0 = this.posX - this.lastReportedPosX;
-            double d1 = this.getEntityBoundingBox().minY - this.lastReportedPosY;
-            double d2 = this.posZ - this.lastReportedPosZ;
-            double d3 = this.rotationYaw - this.lastReportedYaw;
-            double d4 = this.rotationPitch - this.lastReportedPitch;
+            double x = event.getX();
+            double y = event.getY();
+            double z = event.getZ();
+            float yaw = event.getYaw();
+            float pitch = event.getPitch();
+            boolean ground = event.isGround();
+            double d0 = x - this.lastReportedPosX;
+            double d1 = y - this.lastReportedPosY;
+            double d2 = z - this.lastReportedPosZ;
+            double d3 = yaw - this.lastReportedYaw;
+            double d4 = pitch - this.lastReportedPitch;
+            if (ViaLoadingBase.getInstance().getTargetVersion().getVersion() > 47) {
+                ++this.positionUpdateTicks;
+            }
             boolean flag2 = d0 * d0 + d1 * d1 + d2 * d2 > 9.0E-4D || this.positionUpdateTicks >= 20;
             boolean flag3 = d3 != 0.0D || d4 != 0.0D;
 
             if (this.ridingEntity == null) {
                 if (flag2 && flag3) {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround));
+                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(x, y, z, yaw, pitch, ground));
                 } else if (flag2) {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.onGround));
+                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, ground));
                 } else if (flag3) {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(this.rotationYaw, this.rotationPitch, this.onGround));
+                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(yaw, pitch, ground));
                 } else {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer(this.onGround));
+                    this.sendQueue.addToSendQueue(new C03PacketPlayer(ground));
                 }
             } else {
-                this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(this.motionX, -999.0D, this.motionZ, this.rotationYaw, this.rotationPitch, this.onGround));
+                this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(this.motionX, -999.0D, this.motionZ, yaw, pitch, ground));
                 flag2 = false;
             }
 
-            ++this.positionUpdateTicks;
+            if (ViaLoadingBase.getInstance().getTargetVersion().getVersion() <= 47) {
+                ++this.positionUpdateTicks;
+            }
 
             if (flag2) {
-                this.lastReportedPosX = this.posX;
-                this.lastReportedPosY = this.getEntityBoundingBox().minY;
-                this.lastReportedPosZ = this.posZ;
+                this.lastReportedPosX = x;
+                this.lastReportedPosY = y;
+                this.lastReportedPosZ = z;
                 this.positionUpdateTicks = 0;
             }
 
             if (flag3) {
-                this.lastReportedYaw = this.rotationYaw;
-                this.lastReportedPitch = this.rotationPitch;
+                this.lastReportedYaw = yaw;
+                this.lastReportedPitch = pitch;
             }
         }
+
+        MotionEvent eventPost = new MotionEvent(this.rotationYaw, this.rotationPitch);
+        Client.getInstance().eventManager.call(eventPost);
+    }
+
+    public Vector2f getPreviousRotation() {
+        return new Vector2f(lastReportedYaw, lastReportedPitch);
     }
 
     public EntityItem dropOneItem(boolean dropAll) {

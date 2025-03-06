@@ -4,7 +4,7 @@ import cc.helium.config.ConfigManager;
 import cc.helium.event.EventManager;
 import cc.helium.module.ModuleManager;
 import cc.helium.util.lang.Languages;
-import cc.helium.viafix.Fixer;
+import cc.helium.util.viafix.Fixer;
 import cc.helium.visual.clickgui.ClickGui;
 import de.florianmichael.viamcp.ViaMCP;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 public class Client {
     public String name = "Helium";
     public String version = "1.0.1";
-    public String edit = "pre3";
+    public String edit = "pre4";
     private static Client instance;
     public static Logger logger = LogManager.getLogger("Helium Client");
 

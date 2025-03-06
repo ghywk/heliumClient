@@ -2,7 +2,6 @@ package cc.helium.config.impl;
 
 import cc.helium.config.Config;
 import cc.helium.config.ConfigManager;
-import cc.helium.util.logging.LogUtil;
 import cc.helium.visual.clickgui.ClickGui;
 import cc.helium.visual.clickgui.component.Frame;
 import com.google.gson.JsonObject;

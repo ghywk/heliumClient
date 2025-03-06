@@ -4,7 +4,6 @@ import cc.helium.Client;
 import cc.helium.config.Config;
 import cc.helium.config.ConfigManager;
 import cc.helium.module.Module;
-import cc.helium.util.logging.LogUtil;
 import cc.helium.value.Value;
 import cc.helium.value.impl.BoolValue;
 import cc.helium.value.impl.ModeValue;

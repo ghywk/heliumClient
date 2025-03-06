@@ -1,5 +1,6 @@
 package cc.helium.util;
 
+import cc.helium.visual.clickgui.component.Component;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 

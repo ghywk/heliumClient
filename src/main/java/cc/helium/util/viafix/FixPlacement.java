@@ -1,4 +1,4 @@
-package cc.helium.viafix;
+package cc.helium.util.viafix;
 
 import cc.helium.event.api.annotations.TargetEvent;
 import cc.helium.event.impl.packet.PacketSendEvent;

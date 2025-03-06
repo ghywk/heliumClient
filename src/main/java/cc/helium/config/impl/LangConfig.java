@@ -4,8 +4,6 @@ import cc.helium.Client;
 import cc.helium.config.Config;
 import cc.helium.config.ConfigManager;
 import cc.helium.util.lang.Languages;
-import cc.helium.visual.clickgui.ClickGui;
-import cc.helium.visual.clickgui.component.Frame;
 import com.google.gson.JsonObject;
 
 import java.io.FileNotFoundException;

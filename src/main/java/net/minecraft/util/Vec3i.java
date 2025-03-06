@@ -4,9 +4,9 @@ import com.google.common.base.Objects;
 
 public class Vec3i implements Comparable<Vec3i> {
     public static final Vec3i NULL_VECTOR = new Vec3i(0, 0, 0);
-    private final int x;
-    private final int y;
-    private final int z;
+    private int x;
+    private int y;
+    private int z;
 
     public Vec3i(int xIn, int yIn, int zIn) {
         this.x = xIn;
@@ -73,5 +73,17 @@ public class Vec3i implements Comparable<Vec3i> {
 
     public String toString() {
         return Objects.toStringHelper(this).add("x", this.getX()).add("y", this.getY()).add("z", this.getZ()).toString();
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
     }
 }

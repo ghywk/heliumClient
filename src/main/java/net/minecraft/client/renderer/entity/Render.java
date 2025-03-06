@@ -147,7 +147,7 @@ public abstract class Render<T extends Entity> implements IEntityRenderer {
         GlStateManager.enableLighting();
     }
 
-    private void renderShadow(Entity entityIn, double x, double y, double z, float shadowAlpha, float partialTicks) {
+    protected void renderShadow(Entity entityIn, double x, double y, double z, float shadowAlpha, float partialTicks) {
         if (!Config.isShaders() || !Shaders.shouldSkipDefaultShadow) {
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(770, 771);
@@ -333,13 +333,6 @@ public abstract class Render<T extends Entity> implements IEntityRenderer {
 
     public RenderManager getRenderManager() {
         return this.renderManager;
-    }
-
-    public boolean isMultipass() {
-        return false;
-    }
-
-    public void renderMultipass(T p_renderMultipass_1_, double p_renderMultipass_2_, double p_renderMultipass_4_, double p_renderMultipass_6_, float p_renderMultipass_8_, float p_renderMultipass_9_) {
     }
 
     public Class getEntityClass() {

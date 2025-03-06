@@ -1,9 +1,12 @@
 package net.minecraft.entity;
 
+import cc.helium.Client;
+import cc.helium.event.impl.movement.StrafeEvent;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockPattern;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.crash.CrashReport;
@@ -108,6 +111,10 @@ public abstract class Entity implements ICommandSender {
     private boolean invulnerable;
     protected UUID entityUniqueID;
     private final CommandResultStats cmdResultStats;
+
+    public float movementYaw, velocityYaw, lastMovementYaw;
+
+    public int offGroundTicks, onGroundTicks;
 
     public int getEntityId() {
         return this.entityId;
@@ -222,6 +229,13 @@ public abstract class Entity implements ICommandSender {
     }
 
     public void onUpdate() {
+        if (this.onGround) {
+            offGroundTicks = 0;
+            onGroundTicks++;
+        } else {
+            onGroundTicks = 0;
+            offGroundTicks++;
+        }
         this.onEntityUpdate();
     }
 
@@ -821,6 +835,24 @@ public abstract class Entity implements ICommandSender {
     }
 
     public void moveFlying(float strafe, float forward, float friction) {
+        boolean player = this == Minecraft.getMinecraft().thePlayer;
+        float yaw = this.rotationYaw;
+
+        if (player) {
+            final StrafeEvent event = new StrafeEvent(forward, friction, this.rotationYaw, strafe);
+
+            Client.getInstance().eventManager.call(event);
+
+            if (event.isCancelled()) {
+                return;
+            }
+
+            forward = event.getForward();
+            strafe = event.getStrafe();
+            friction = event.getFriction();
+            yaw = event.getYaw();
+        }
+
         float f = strafe * strafe + forward * forward;
 
         if (f >= 1.0E-4F) {
@@ -833,10 +865,10 @@ public abstract class Entity implements ICommandSender {
             f = friction / f;
             strafe = strafe * f;
             forward = forward * f;
-            float f1 = MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F);
-            float f2 = MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F);
-            this.motionX += strafe * f2 - forward * f1;
-            this.motionZ += forward * f2 + strafe * f1;
+            float f1 = MathHelper.sin(yaw * (float) Math.PI / 180.0F);
+            float f2 = MathHelper.cos(yaw * (float) Math.PI / 180.0F);
+            this.motionX += (double) (strafe * f2 - forward * f1);
+            this.motionZ += (double) (forward * f2 + strafe * f1);
         }
     }
 
@@ -992,7 +1024,7 @@ public abstract class Entity implements ICommandSender {
         }
     }
 
-    protected final Vec3 getVectorForRotation(float pitch, float yaw) {
+    public final Vec3 getVectorForRotation(float pitch, float yaw) {
         float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
         float f2 = -MathHelper.cos(-pitch * 0.017453292F);
@@ -1016,6 +1048,17 @@ public abstract class Entity implements ICommandSender {
         Vec3 vec31 = this.getLook(partialTicks);
         Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
         return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
+    }
+
+    public MovingObjectPosition rayTrace(double blockReachDistance, float yaw, float pitch) {
+        Vec3 vec3 = this.getPositionEyes(1.0F);
+        Vec3 vec31 = this.getLook(yaw, pitch);
+        Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
+        return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
+    }
+
+    public Vec3 getLook(float yaw, float pitch) {
+        return this.getVectorForRotation(pitch, yaw);
     }
 
     public boolean canBeCollidedWith() {
@@ -1845,6 +1888,10 @@ public abstract class Entity implements ICommandSender {
 
     public Vec3 getPositionVector() {
         return new Vec3(this.posX, this.posY, this.posZ);
+    }
+
+    public cc.helium.util.vector.Vector3d getPositionVector3d() {
+        return new cc.helium.util.vector.Vector3d(this.posX, this.posY, this.posZ);
     }
 
     public World getEntityWorld() {

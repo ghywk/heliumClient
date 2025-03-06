@@ -1,13 +1,11 @@
 package cc.helium.module;
 
-import cc.helium.event.api.annotations.TargetEvent;
-import cc.helium.event.impl.update.UpdateEvent;
 import cc.helium.module.impl.movement.Sprint;
+import cc.helium.module.impl.render.BetterItem;
 import cc.helium.module.impl.render.ClickGUI;
 import cc.helium.module.impl.render.HUDModule;
 import cc.helium.util.Util;
 import cc.helium.util.logging.LogUtil;
-import net.minecraft.client.gui.ScaledResolution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +70,7 @@ public class ModuleManager implements Util {
         add(new Sprint());
         add(new ClickGUI());
         add(new HUDModule());
+        add(new BetterItem());
 
         LogUtil.log_info("Module Loaded");
     }

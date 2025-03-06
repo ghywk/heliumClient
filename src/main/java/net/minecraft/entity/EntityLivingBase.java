@@ -1,5 +1,7 @@
 package net.minecraft.entity;
 
+import cc.helium.Client;
+import cc.helium.event.impl.movement.JumpEvent;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
@@ -8,6 +10,8 @@ import de.florianmichael.vialoadingbase.ViaLoadingBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.*;
 import net.minecraft.entity.item.EntityItem;
@@ -62,6 +66,10 @@ public abstract class EntityLivingBase extends Entity {
     public float prevRenderYawOffset;
     public float rotationYawHead;
     public float prevRotationYawHead;
+
+    public float prevRotationPitchHead;
+    public float rotationPitchHead;
+
     public float jumpMovementFactor = 0.02F;
     protected EntityPlayer attackingPlayer;
     protected int recentlyHit;
@@ -653,7 +661,7 @@ public abstract class EntityLivingBase extends Entity {
                             d1 = (Math.random() - Math.random()) * 0.01D;
                         }
 
-                        this.attackedAtYaw = (float) (MathHelper.atan2(d0, d1) * 180.0D / Math.PI - (double) this.rotationYaw);
+                        this.attackedAtYaw = (float) (MathHelper.atan2(d0, d1) * 180.0D / Math.PI - (double) this.movementYaw);
                         this.knockBack(entity, amount, d1, d0);
                     } else {
                         this.attackedAtYaw = (float) ((int) (Math.random() * 2.0D) * 180);
@@ -1059,14 +1067,30 @@ public abstract class EntityLivingBase extends Entity {
     }
 
     protected void jump() {
-        this.motionY = this.getJumpUpwardsMotion();
+        float jumpMotion = this.getJumpUpwardsMotion();
 
-        if (this.isPotionActive(Potion.jump)) {
-            this.motionY += (float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
+        JumpEvent eventJump = new JumpEvent(jumpMotion, this.movementYaw);
+        Client.getInstance().eventManager.call(eventJump);
+
+        if (eventJump.isCancelled()) {
+            return;
         }
 
+        if (this.isPotionActive(Potion.jump)) {
+            jumpMotion += (float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
+        }
+
+        if (this instanceof EntityPlayerSP) {
+            this.movementYaw = eventJump.getYaw();
+            this.velocityYaw = eventJump.getYaw();
+        }
+        this.motionY = jumpMotion;
+
         if (this.isSprinting()) {
-            float f = this.rotationYaw * 0.017453292F;
+            float f = eventJump.getYaw() * 0.017453292F;
+
+            final Minecraft mc = Minecraft.getMinecraft();
+
             this.motionX -= MathHelper.sin(f) * 0.2F;
             this.motionZ += MathHelper.cos(f) * 0.2F;
         }
@@ -1321,6 +1345,9 @@ public abstract class EntityLivingBase extends Entity {
         while (this.rotationYawHead - this.prevRotationYawHead >= 180.0F) {
             this.prevRotationYawHead += 360.0F;
         }
+
+        this.prevRotationPitchHead = this.rotationPitchHead;
+        this.prevRotationPitch = this.rotationPitch;
 
         this.worldObj.theProfiler.endSection();
         this.movedDistance += f2;

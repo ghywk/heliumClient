@@ -1,32 +1,47 @@
 package cc.helium.module.impl.render;
 
+import cc.helium.Client;
 import cc.helium.event.api.annotations.TargetEvent;
 import cc.helium.event.impl.render.Render2DEvent;
 import cc.helium.module.Category;
 import cc.helium.module.Module;
 import cc.helium.util.animation.Animation;
 import cc.helium.util.animation.Direction;
+import cc.helium.util.cal.Mth;
 import cc.helium.value.impl.BoolValue;
 import cc.helium.value.impl.NumberValue;
 import cc.helium.visual.font.FontManager;
 import cc.helium.visual.hud.notifications.Notification;
 import cc.helium.visual.hud.notifications.NotificationManager;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.MathHelper;
 
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Kev1nLeft
  */
 
 public class HUDModule extends Module {
-    private static final NumberValue red = new NumberValue("Client-Red", 163, 0, 255, 1);
-    private static final NumberValue blue = new NumberValue("Client-Blue", 223, 0, 255, 1);
-    private static final NumberValue green = new NumberValue("Client-Green", 255, 0, 255, 1);
-    private static final NumberValue alpha = new NumberValue("Client-Alpha", 220, 0, 255, 1);
+    private static final NumberValue red = new NumberValue("Client red", 163, 0, 255, 1);
+    private static final NumberValue blue = new NumberValue("Client blue", 223, 0, 255, 1);
+    private static final NumberValue green = new NumberValue("Client green", 255, 0, 255, 1);
+    private static final NumberValue alpha = new NumberValue("Client alpha", 220, 0, 255, 1);
     public static BoolValue notificationsValue = new BoolValue("Notifications", true);
-    private final NumberValue time = new NumberValue("Noti-Time", 2, 1, 10, 0.5);
+    private final NumberValue time = new NumberValue("Noti time", 2, 1, 10, 0.5);
+    private final BoolValue drawTimeVal = new BoolValue("WaterMark time", true);
+    private final BoolValue rainBow = new BoolValue("WaterMark rainbow", true);
+    private final NumberValue rainBowSpeed = new NumberValue("Rainbow speed", 15, 1, 25, 1);
+    private final BoolValue arrayListLeft = new BoolValue("ArrayList left", false);
 
+    private float hue = 0.0F;
     public static Color clientColor = new Color(red.getValue().intValue(), green.getValue().intValue(), blue.getValue().intValue(), alpha.getValue().intValue());
     public HUDModule() {
         super("HUD", -1, Category.Render);
@@ -34,11 +49,71 @@ public class HUDModule extends Module {
 
     @TargetEvent
     public void onRender2D(Render2DEvent ignored) {
-        if (!notificationsValue.getValue() || mc.thePlayer == null) return;
-        render();
+        if (mc.thePlayer == null) return;
+        this.hue += rainBowSpeed.getValue().floatValue() / 5.0F;
+        if (notificationsValue.getValue()) {
+            renderNotifications();
+        }
+
+        drawWaterMark();
     }
 
-    public void render() {
+    public static int getColor(int red, int green, int blue, int alpha) {
+        int color = MathHelper.clamp_int(alpha, 0, 255) << 24;
+        color |= MathHelper.clamp_int(red, 0, 255) << 16;
+        color |= MathHelper.clamp_int(green, 0, 255) << 8;
+        color |= MathHelper.clamp_int(blue, 0, 255);
+        return color;
+    }
+
+    public static int getColor(int brightness, int alpha) {
+        return getColor(brightness, brightness, brightness, alpha);
+    }
+
+    public void drawWaterMark() {
+        int colorXD;
+        String clientName;
+        String name;
+        float h = this.hue;
+        boolean drawTime = drawTimeVal.getValue();
+        FontRenderer font = mc.fontRendererObj;
+        boolean selected = rainBow.getValue();
+        Color color2222 = Color.getHSBColor(h / 255.0F, 0.55F, 0.9F);
+        int c2222 = color2222.getRGB();
+        colorXD = selected ? c2222 : getColor(clientColor.getRed(), clientColor.getGreen(), clientColor.getBlue(), 220);
+        clientName = "Exhibition";
+
+        name = String.valueOf(clientName.charAt(0));
+        font.drawStringWithShadow(name, 3.0F, 3.0F, colorXD);
+
+        String ok = clientName.substring(1);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("hh:mm");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        font.drawStringWithShadow(ok + (drawTime ? " \2477[\247r" + strDate + "\2477]\247f" : ""), 3F + font.getStringWidth(name), 3.0F, getColor(255, 220));
+        boolean left = arrayListLeft.getValue();
+        int y = left ? 15 : 3;
+        List<Module> modules = Client.getInstance().moduleManager.getEnableModules();
+
+        modules.sort(Comparator.comparingDouble((o) -> -Mth.getIncremental(font.getStringWidth(o.getSuffix() != null ? o.getName() + " " + o.getSuffix() : o.getName()), 0.5D)));
+
+        for (Module module : modules) {
+            if (h > 255.0F) {
+                h = 0.0F;
+            }
+
+            String suffix = module.getSuffix() != null ? " \2477" + module.getSuffix() : "";
+            ScaledResolution resolution = new ScaledResolution(mc);
+            String text = module.getName() + suffix;
+            float x = left ? 3.0F : resolution.getScaledWidth() - font.getStringWidth(text) - 3.0F;
+            boolean rainbow = rainBow.getValue();
+            font.drawStringWithShadow(text, x, y, rainbow ? colorXD : clientColor.getRGB());
+            h += 9.0F;
+            y += 9;
+        }
+    }
+
+    public void renderNotifications() {
         float yOffset = 0;
         int notificationHeight;
         int notificationWidth;

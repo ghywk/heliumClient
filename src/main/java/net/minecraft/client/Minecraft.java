@@ -1146,7 +1146,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     @SuppressWarnings("incomplete-switch")
-    private void rightClickMouse() {
+    public void rightClickMouse() {
         if (!this.playerController.getIsHittingBlock()) {
             this.rightClickDelayTimer = 4;
             boolean flag = true;
@@ -1270,6 +1270,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     public void runTick() throws IOException {
+        if (thePlayer != null) {
+            thePlayer.lastMovementYaw = thePlayer.movementYaw;
+            thePlayer.movementYaw = thePlayer.velocityYaw = thePlayer.rotationYaw;
+        }
+
         if (this.rightClickDelayTimer > 0) {
             --this.rightClickDelayTimer;
         }

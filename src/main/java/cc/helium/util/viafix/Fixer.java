@@ -1,8 +1,6 @@
-package cc.helium.viafix;
+package cc.helium.util.viafix;
 
 import cc.helium.Client;
-
-import java.util.List;
 
 /**
  * @author Kev1nLeft
@@ -14,6 +12,5 @@ public class Fixer {
         Client.getInstance().eventManager.register(new FixMovement());
         Client.getInstance().eventManager.register(new FixPlacement());
         Client.getInstance().eventManager.register(new FixInteract());
-        Client.getInstance().eventManager.register(new FixLadder());
     }
 }
