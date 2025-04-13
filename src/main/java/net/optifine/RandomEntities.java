@@ -1,5 +1,7 @@
 package net.optifine;
 
+import cc.helium.Client;
+import cc.helium.event.impl.world.WorldEvent;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.DataWatcher;
@@ -73,6 +75,8 @@ public class RandomEntities {
     }
 
     public static void worldChanged(World oldWorld, World newWorld) {
+        Client.getInstance().eventManager.call(new WorldEvent());
+
         if (newWorld != null) {
             List list = newWorld.getLoadedEntityList();
 

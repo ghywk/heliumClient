@@ -1,6 +1,6 @@
 package cc.helium.util.viafix;
 
-import cc.helium.event.api.annotations.TargetEvent;
+import cc.helium.event.api.annotations.SubscribeEvent;
 import cc.helium.event.impl.packet.PacketSendEvent;
 import cc.helium.util.Util;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
@@ -13,7 +13,7 @@ import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
  */
 
 public class FixPlacement implements Util {
-    @TargetEvent
+    @SubscribeEvent
     public void onPacketSend(PacketSendEvent event) {
         if (ViaLoadingBase.getInstance().getTargetVersion().newerThanOrEqualTo(ProtocolVersion.v1_11)) {
             final Packet<?> packet = event.getPacket();

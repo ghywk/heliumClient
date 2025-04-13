@@ -6,5 +6,5 @@ package cc.helium.util.lang;
 
 public enum Languages {
     ENGLISH,
-    CHINESE,
+    CHINESE
 }

@@ -1,6 +1,8 @@
 package cc.helium.module;
 
 import cc.helium.Client;
+import cc.helium.event.api.annotations.SubscribeEvent;
+import cc.helium.event.impl.update.UpdateEvent;
 import cc.helium.util.Util;
 import cc.helium.util.lang.LangUtil;
 import cc.helium.value.Value;
@@ -106,13 +108,12 @@ public class Module implements Util {
     public void onDisable() {
     }
 
-    public Value getValue(final String valueName) {
+    public Value<?> getValue(final String valueName) {
         for (final Field field : getClass().getDeclaredFields()) {
             try {
                 field.setAccessible(true);
                 final Object o = field.get(this);
-                if(o instanceof Value) {
-                    final Value value = (Value) o;
+                if(o instanceof Value<?> value) {
                     if (value.getName().equalsIgnoreCase(valueName)) return value;
                 }
             } catch (IllegalAccessException e) {
@@ -122,13 +123,13 @@ public class Module implements Util {
         return null;
     }
 
-    public List<Value> getValues() {
-        final List<Value> values = new ArrayList<>();
+    public List<Value<?>> getValues() {
+        final List<Value<?>> values = new ArrayList<>();
         for (final Field field : getClass().getDeclaredFields()) {
             try {
                 field.setAccessible(true);
                 final Object o = field.get(this);
-                if (o instanceof Value) values.add((Value) o);
+                if (o instanceof Value) values.add((Value<?>) o);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }

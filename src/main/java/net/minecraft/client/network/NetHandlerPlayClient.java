@@ -1403,4 +1403,8 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
     public GameProfile getGameProfile() {
         return this.profile;
     }
+
+    public void addToSendQueueUnregistered(Packet p_147297_1_) {
+        this.netManager.sendUnregisteredPacket(p_147297_1_);
+    }
 }

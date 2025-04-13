@@ -2,7 +2,7 @@ package cc.helium.event;
 
 import cc.helium.event.api.Event;
 import cc.helium.event.api.annotations.Priority;
-import cc.helium.event.api.annotations.TargetEvent;
+import cc.helium.event.api.annotations.SubscribeEvent;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -48,7 +48,7 @@ public class EventManager {
             Annotation[] annotations = method.getDeclaredAnnotations();
 
             for (Annotation annotation : annotations) {
-                if (annotation.annotationType() == TargetEvent.class && method.getParameterTypes().length == 1) {
+                if (annotation.annotationType() == SubscribeEvent.class && method.getParameterTypes().length == 1) {
                     registeredMethodMap.put(method, method.getParameterTypes()[0]);
                     methodObjectMap.put(method, obj);
 

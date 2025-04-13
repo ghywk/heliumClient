@@ -16,6 +16,8 @@ public class FontManager {
 
     public static UFontRenderer arial18 = Arial(18);
 
+    public static UFontRenderer plain18 = new UFontRenderer("Default", 18);
+
     private static UFontRenderer getRenderer(String name, int size, HashMap<Integer, UFontRenderer> map) {
         if (map.containsKey(size)) {
             return map.get(size);

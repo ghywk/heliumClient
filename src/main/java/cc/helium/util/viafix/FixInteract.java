@@ -1,7 +1,7 @@
 package cc.helium.util.viafix;
 
 import cc.helium.event.api.annotations.Priority;
-import cc.helium.event.api.annotations.TargetEvent;
+import cc.helium.event.api.annotations.SubscribeEvent;
 import cc.helium.event.impl.packet.PacketSendEvent;
 import cc.helium.util.Util;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
@@ -13,7 +13,7 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
  */
 
 public class FixInteract implements Util {
-    @TargetEvent
+    @SubscribeEvent
     @Priority(value = 0)
     public void onPacketSend(PacketSendEvent event) {
         if (!event.isCancelled() && ViaLoadingBase.getInstance()

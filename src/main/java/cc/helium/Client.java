@@ -4,6 +4,7 @@ import cc.helium.config.ConfigManager;
 import cc.helium.event.EventManager;
 import cc.helium.module.ModuleManager;
 import cc.helium.util.lang.Languages;
+import cc.helium.util.rotation.RotationComponent;
 import cc.helium.util.viafix.Fixer;
 import cc.helium.visual.clickgui.ClickGui;
 import de.florianmichael.viamcp.ViaMCP;
@@ -25,7 +26,7 @@ public class Client {
     public ModuleManager moduleManager;
     public ConfigManager configManager;
 
-    public Languages lang;
+    public Languages lang = Languages.ENGLISH;
 
     public Client() {
         instance = this;
@@ -41,6 +42,7 @@ public class Client {
         new Fixer();
         configManager.loadConfigs();
 
+        eventManager.register(new RotationComponent());
         eventManager.register(moduleManager);
 
         this.startViaMCP();

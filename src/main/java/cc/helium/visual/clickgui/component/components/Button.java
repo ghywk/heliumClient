@@ -35,7 +35,8 @@ public class Button extends Component {
 		height = 12;
 		int opY = offset + height;
 		if (!mod.getValues().isEmpty()) {
-			for(Value<?> s : mod.getValues()){
+			for (Value<?> s : mod.getValues()){
+				if (!s.isDisplayable()) continue;
 				if (s instanceof ModeValue) {
 					this.subcomponents.add(new ModeButton((ModeValue) s, this, opY));
 					opY += height;

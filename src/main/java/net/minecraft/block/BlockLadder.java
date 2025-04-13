@@ -38,30 +38,21 @@ public class BlockLadder extends Block {
     {
         IBlockState iblockstate = worldIn.getBlockState(pos);
 
-        if (iblockstate.getBlock() == this)
-        {
-            float f;
-
-            if (ViaLoadingBase.getInstance().getTargetVersion().equals(ProtocolVersion.v1_8)) {
-                f = 0.125F;
-            } else {
-                f = 0.1875F;
+        if (iblockstate.getBlock() == this) {
+            float f = 0.125F;
+            if (ViaLoadingBase.getInstance().getTargetVersion().newerThanOrEqualTo(ProtocolVersion.v1_12_2)) {
+                f = 0.1875f;
             }
-
-            switch ((EnumFacing)iblockstate.getValue(FACING))
-            {
+            switch (iblockstate.getValue(FACING)) {
                 case NORTH:
                     this.setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
                     break;
-
                 case SOUTH:
                     this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
                     break;
-
                 case WEST:
                     this.setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
                     break;
-
                 case EAST:
                 default:
                     this.setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);

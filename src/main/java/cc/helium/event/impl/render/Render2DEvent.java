@@ -6,5 +6,5 @@ import cc.helium.event.api.Event;
  * @author Kev1nLeft
  */
 
-public class Render2DEvent implements Event {
+public record Render2DEvent(float ticks) implements Event {
 }

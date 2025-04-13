@@ -2,6 +2,7 @@ package net.minecraft.entity;
 
 import cc.helium.Client;
 import cc.helium.event.impl.movement.StrafeEvent;
+import cc.helium.util.rotation.RotationUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -1050,6 +1051,13 @@ public abstract class Entity implements ICommandSender {
         return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
     }
 
+    public MovingObjectPosition rayTrace(double blockReachDistance, float partialTicks, float yaw, float pitch) {
+        Vec3 vec3 = this.getPositionEyes(partialTicks);
+        Vec3 vec4 = this.getLook(yaw, pitch);
+        Vec3 vec5 = vec3.addVector(vec4.xCoord * blockReachDistance, vec4.yCoord * blockReachDistance, vec4.zCoord * blockReachDistance);
+        return this.worldObj.rayTraceBlocks(vec3, vec5, false, false, true);
+    }
+
     public MovingObjectPosition rayTrace(double blockReachDistance, float yaw, float pitch) {
         Vec3 vec3 = this.getPositionEyes(1.0F);
         Vec3 vec31 = this.getLook(yaw, pitch);
@@ -1939,5 +1947,14 @@ public abstract class Entity implements ICommandSender {
         }
 
         EnchantmentHelper.applyArthropodEnchantments(entityLivingBaseIn, entityIn);
+    }
+
+    public float getClosestDistanceToEntity(Entity entityIn) {
+        Vec3 eyes = this.getPositionEyes(1.0f);
+        Vec3 pos = RotationUtil.getNearestPointBB(eyes, entityIn.getEntityBoundingBox());
+        double xDist = Math.abs(pos.xCoord - eyes.xCoord);
+        double yDist = Math.abs(pos.yCoord - eyes.yCoord);
+        double zDist = Math.abs(pos.zCoord - eyes.zCoord);
+        return (float)Math.sqrt(Math.pow(xDist, 2.0) + Math.pow(yDist, 2.0) + Math.pow(zDist, 2.0));
     }
 }

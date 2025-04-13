@@ -138,4 +138,12 @@ public class Vec3 {
         double d2 = this.zCoord * (double) f - this.xCoord * (double) f1;
         return new Vec3(d0, d1, d2);
     }
+
+    public double lengthSquared() {
+        return this.xCoord * this.xCoord + this.yCoord * this.yCoord + this.zCoord * this.zCoord;
+    }
+
+    public Vec3 flat() {
+        return new Vec3(this.xCoord, 0.0, this.zCoord);
+    }
 }

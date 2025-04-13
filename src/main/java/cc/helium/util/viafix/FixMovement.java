@@ -1,6 +1,6 @@
 package cc.helium.util.viafix;
 
-import cc.helium.event.api.annotations.TargetEvent;
+import cc.helium.event.api.annotations.SubscribeEvent;
 import cc.helium.event.impl.update.UpdateEvent;
 import cc.helium.util.Util;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
@@ -12,7 +12,7 @@ import net.minecraft.util.AxisAlignedBB;
  */
 
 public class FixMovement implements Util {
-    @TargetEvent
+    @SubscribeEvent
     public void onUpdate(UpdateEvent ignored) {
         if (ViaLoadingBase.getInstance().getTargetVersion().newerThan(ProtocolVersion.v1_8)) {
             mc.thePlayer.setEntityBoundingBox(new AxisAlignedBB(mc.thePlayer.posX - 0.3, mc.thePlayer.posY,

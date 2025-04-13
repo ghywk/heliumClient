@@ -1,6 +1,9 @@
 package net.minecraft.client;
 
 import cc.helium.Client;
+import cc.helium.event.api.type.Timing;
+import cc.helium.event.impl.update.TickEvent;
+import cc.helium.event.impl.world.PlaceEvent;
 import com.google.common.collect.*;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -1092,7 +1095,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         }
     }
 
-    private void sendClickBlockToController(boolean leftClick) {
+    public void sendClickBlockToController(boolean leftClick) {
         if (!leftClick) {
             this.leftClickCounter = 0;
         }
@@ -1270,6 +1273,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     public void runTick() throws IOException {
+        Client.getInstance().eventManager.call(new TickEvent(Timing.PRE));
+
         if (thePlayer != null) {
             thePlayer.lastMovementYaw = thePlayer.movementYaw;
             thePlayer.movementYaw = thePlayer.velocityYaw = thePlayer.rotationYaw;
@@ -1558,38 +1563,47 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
                 this.displayGuiScreen(new GuiChat("/"));
             }
 
-            if (this.thePlayer.isUsingItem()) {
-                if (!this.gameSettings.keyBindUseItem.isKeyDown()) {
-                    this.playerController.onStoppedUsingItem(this.thePlayer);
+            final PlaceEvent eventClick = new PlaceEvent(this.thePlayer.inventory.currentItem);
+            eventClick.setShouldRightClick(true);
+            Client.getInstance().eventManager.call(eventClick);
+            this.thePlayer.inventory.currentItem = eventClick.getSlot();
+
+            if (!eventClick.isCancelled()) {
+                if (this.thePlayer.isUsingItem()) {
+                    if (!this.gameSettings.keyBindUseItem.isKeyDown()) {
+                        this.playerController.onStoppedUsingItem(this.thePlayer);
+                    }
+
+                    while (this.gameSettings.keyBindAttack.isPressed()) {
+                    }
+
+                    while (this.gameSettings.keyBindUseItem.isPressed()) {
+                    }
+
+                    while (this.gameSettings.keyBindPickBlock.isPressed()) {
+                    }
+                } else {
+                    while (this.gameSettings.keyBindAttack.isPressed()) {
+                        this.clickMouse();
+                    }
+
+                    if (eventClick.isShouldRightClick()) {
+                        while (this.gameSettings.keyBindUseItem.isPressed()) {
+                            this.rightClickMouse();
+                        }
+                    }
+
+                    while (this.gameSettings.keyBindPickBlock.isPressed()) {
+                        this.middleClickMouse();
+                    }
                 }
 
-                while (this.gameSettings.keyBindAttack.isPressed()) {
-                }
-
-                while (this.gameSettings.keyBindUseItem.isPressed()) {
-                }
-
-                while (this.gameSettings.keyBindPickBlock.isPressed()) {
-                }
-            } else {
-                while (this.gameSettings.keyBindAttack.isPressed()) {
-                    this.clickMouse();
-                }
-
-                while (this.gameSettings.keyBindUseItem.isPressed()) {
+                if (eventClick.isShouldRightClick() && this.gameSettings.keyBindUseItem.isKeyDown() && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem()) {
                     this.rightClickMouse();
                 }
 
-                while (this.gameSettings.keyBindPickBlock.isPressed()) {
-                    this.middleClickMouse();
-                }
+                this.sendClickBlockToController(this.currentScreen == null && this.gameSettings.keyBindAttack.isKeyDown() && this.inGameHasFocus);
             }
-
-            if (this.gameSettings.keyBindUseItem.isKeyDown() && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem()) {
-                this.rightClickMouse();
-            }
-
-            this.sendClickBlockToController(this.currentScreen == null && this.gameSettings.keyBindAttack.isKeyDown() && this.inGameHasFocus);
         }
 
         if (this.theWorld != null) {
@@ -1670,6 +1684,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
         this.mcProfiler.endSection();
         this.systemTime = getSystemTime();
+
+        Client.getInstance().eventManager.call(new TickEvent(Timing.POST));
     }
 
     public void launchIntegratedServer(String folderName, String worldName, WorldSettings worldSettingsIn) {

@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer;
 
+import cc.helium.module.impl.combat.KillAura;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -17,10 +18,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemMap;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.src.Config;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
@@ -294,9 +292,9 @@ public class ItemRenderer {
             if (this.itemToRender != null) {
                 if (this.itemToRender.getItem() instanceof ItemMap) {
                     this.renderItemMap(abstractclientplayer, f2, f, f1);
-                } else if (abstractclientplayer.getItemInUseCount() > 0) {
-                    EnumAction enumaction = this.itemToRender.getItemUseAction();
-
+                } else if (abstractclientplayer.getItemInUseCount() > 0 || (itemToRender.getItem() instanceof ItemSword && (KillAura.renderBlocking))) {
+                    EnumAction enumaction;
+                    enumaction = KillAura.renderBlocking ? EnumAction.BLOCK : this.itemToRender.getItemUseAction();
                     switch (enumaction) {
                         case NONE:
                             this.transformFirstPersonItem(f, 0.0F);

@@ -1,7 +1,7 @@
 package cc.helium.module.impl.render;
 
 import cc.helium.Client;
-import cc.helium.event.api.annotations.TargetEvent;
+import cc.helium.event.api.annotations.SubscribeEvent;
 import cc.helium.event.impl.render.Render2DEvent;
 import cc.helium.module.Category;
 import cc.helium.module.Module;
@@ -21,9 +21,7 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Kev1nLeft
@@ -34,12 +32,15 @@ public class HUDModule extends Module {
     private static final NumberValue blue = new NumberValue("Client blue", 223, 0, 255, 1);
     private static final NumberValue green = new NumberValue("Client green", 255, 0, 255, 1);
     private static final NumberValue alpha = new NumberValue("Client alpha", 220, 0, 255, 1);
+    public static BoolValue fontValue = new BoolValue("Custom font", true);
     public static BoolValue notificationsValue = new BoolValue("Notifications", true);
-    private final NumberValue time = new NumberValue("Noti time", 2, 1, 10, 0.5);
-    private final BoolValue drawTimeVal = new BoolValue("WaterMark time", true);
-    private final BoolValue rainBow = new BoolValue("WaterMark rainbow", true);
-    private final NumberValue rainBowSpeed = new NumberValue("Rainbow speed", 15, 1, 25, 1);
-    private final BoolValue arrayListLeft = new BoolValue("ArrayList left", false);
+    private final NumberValue time = new NumberValue("Notifications time", 2, 1, 10, 0.5, () -> notificationsValue.getValue());
+    public static BoolValue watermarkValue = new BoolValue("WaterMark", true);
+    private final BoolValue drawTimeVal = new BoolValue("WaterMark time", true, () -> watermarkValue.getValue());
+    private final BoolValue rainBow = new BoolValue("WaterMark rainbow", true, () -> watermarkValue.getValue());
+    public static BoolValue arrayListValue = new BoolValue("Array list", true);
+    private final NumberValue rainBowSpeed = new NumberValue("Rainbow speed", 15, 1, 25, 1, () -> watermarkValue.getValue() || arrayListValue.getValue());
+    private final BoolValue arrayListLeft = new BoolValue("Array list left", false, () -> arrayListValue.getValue());
 
     private float hue = 0.0F;
     public static Color clientColor = new Color(red.getValue().intValue(), green.getValue().intValue(), blue.getValue().intValue(), alpha.getValue().intValue());
@@ -47,15 +48,23 @@ public class HUDModule extends Module {
         super("HUD", -1, Category.Render);
     }
 
-    @TargetEvent
+    @SubscribeEvent
     public void onRender2D(Render2DEvent ignored) {
         if (mc.thePlayer == null) return;
         this.hue += rainBowSpeed.getValue().floatValue() / 5.0F;
+        clientColor = new Color(red.getValue().intValue(), green.getValue().intValue(), blue.getValue().intValue(), alpha.getValue().intValue());
+
         if (notificationsValue.getValue()) {
             renderNotifications();
         }
 
-        drawWaterMark();
+        if (watermarkValue.getValue()) {
+            drawWaterMark();
+        }
+
+        if (arrayListValue.getValue()) {
+            drawArrayList(hue, clientColor.getRGB());
+        }
     }
 
     public static int getColor(int red, int green, int blue, int alpha) {
@@ -77,6 +86,7 @@ public class HUDModule extends Module {
         float h = this.hue;
         boolean drawTime = drawTimeVal.getValue();
         FontRenderer font = mc.fontRendererObj;
+        if (fontValue.getValue()) font = FontManager.plain18;
         boolean selected = rainBow.getValue();
         Color color2222 = Color.getHSBColor(h / 255.0F, 0.55F, 0.9F);
         int c2222 = color2222.getRGB();
@@ -91,11 +101,19 @@ public class HUDModule extends Module {
         Date now = new Date();
         String strDate = sdfDate.format(now);
         font.drawStringWithShadow(ok + (drawTime ? " \2477[\247r" + strDate + "\2477]\247f" : ""), 3F + font.getStringWidth(name), 3.0F, getColor(255, 220));
+    }
+
+    private void drawArrayList(float h, int colorXD) {
+        FontRenderer font;
+        if (fontValue.getValue()) font = FontManager.plain18;
+        else {
+            font = mc.fontRendererObj;
+        }
         boolean left = arrayListLeft.getValue();
         int y = left ? 15 : 3;
         List<Module> modules = Client.getInstance().moduleManager.getEnableModules();
 
-        modules.sort(Comparator.comparingDouble((o) -> -Mth.getIncremental(font.getStringWidth(o.getSuffix() != null ? o.getName() + " " + o.getSuffix() : o.getName()), 0.5D)));
+        modules.sort(Comparator.comparingDouble((o) -> -Mth.getIncremental(font.getStringWidth(o.getSuffix() != null ? o.getTranslatedName() + " " + o.getSuffix() : o.getTranslatedName()), 0.5D)));
 
         for (Module module : modules) {
             if (h > 255.0F) {
@@ -104,7 +122,7 @@ public class HUDModule extends Module {
 
             String suffix = module.getSuffix() != null ? " \2477" + module.getSuffix() : "";
             ScaledResolution resolution = new ScaledResolution(mc);
-            String text = module.getName() + suffix;
+            String text = module.getTranslatedName() + suffix;
             float x = left ? 3.0F : resolution.getScaledWidth() - font.getStringWidth(text) - 3.0F;
             boolean rainbow = rainBow.getValue();
             font.drawStringWithShadow(text, x, y, rainbow ? colorXD : clientColor.getRGB());

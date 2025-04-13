@@ -1,6 +1,7 @@
 package net.minecraft.network;
 
 import cc.helium.Client;
+import cc.helium.event.impl.packet.PacketReceiveEvent;
 import cc.helium.event.impl.packet.PacketSendEvent;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -112,8 +113,15 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
     protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception {
         if (this.channel.isOpen()) {
             try {
+                final PacketReceiveEvent event = new PacketReceiveEvent(this, p_channelRead0_2_);
+                Client.getInstance().eventManager.call(event);
+
+                if (event.isCancelled()) {
+                    return;
+                }
+
                 p_channelRead0_2_.processPacket(this.packetListener);
-            } catch (ThreadQuickExitException var4) {
+            } catch (ThreadQuickExitException ignored) {
             }
         }
     }
@@ -139,7 +147,8 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
         }
     }
 
-    public void sendPacket(Packet packetIn, GenericFutureListener<? extends Future<? super Void>> listener, GenericFutureListener<? extends Future<? super Void>>... listeners) {
+    @SafeVarargs
+    public final void sendPacket(Packet packetIn, GenericFutureListener<? extends Future<? super Void>> listener, GenericFutureListener<? extends Future<? super Void>>... listeners) {
         if (this.isChannelOpen()) {
             this.flushOutboundQueue();
             this.dispatchPacket(packetIn, ArrayUtils.add(listeners, 0, listener));
@@ -355,6 +364,54 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
         }
     }
 
+    public void sendUnregisteredPacket(Packet packetIn) {
+        if (this.isChannelOpen()) {
+            this.flushOutboundQueue();
+            this.dispatchUnregisteredPacket(packetIn, null);
+        } else {
+            this.readWriteLock.writeLock().lock();
+            try {
+                this.outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(packetIn, null));
+            }
+            finally {
+                this.readWriteLock.writeLock().unlock();
+            }
+        }
+    }
+
+    private void dispatchUnregisteredPacket(final Packet inPacket, final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
+        final EnumConnectionState enumconnectionstate = EnumConnectionState.getFromPacket(inPacket);
+        final EnumConnectionState enumconnectionstate1 = (EnumConnectionState)((Object)this.channel.attr(attrKeyConnectionState).get());
+        if (enumconnectionstate1 != enumconnectionstate) {
+            logger.debug("Disabled auto read");
+            this.channel.config().setAutoRead(false);
+        }
+        if (this.channel.eventLoop().inEventLoop()) {
+            if (enumconnectionstate != enumconnectionstate1) {
+                this.setConnectionState(enumconnectionstate);
+            }
+            ChannelFuture channelfuture = this.channel.writeAndFlush((Object)inPacket);
+            if (futureListeners != null) {
+                channelfuture.addListeners(futureListeners);
+            }
+            channelfuture.addListener((GenericFutureListener)ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+        } else {
+            this.channel.eventLoop().execute(new Runnable(){
+
+                @Override
+                public void run() {
+                    if (enumconnectionstate != enumconnectionstate1) {
+                        NetworkManager.this.setConnectionState(enumconnectionstate);
+                    }
+                    ChannelFuture channelfuture1 = NetworkManager.this.channel.writeAndFlush((Object)inPacket);
+                    if (futureListeners != null) {
+                        channelfuture1.addListeners(futureListeners);
+                    }
+                    channelfuture1.addListener((GenericFutureListener)ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+                }
+            });
+        }
+    }
     static class InboundHandlerTuplePacketListener {
         private final Packet packet;
         private final GenericFutureListener<? extends Future<? super Void>>[] futureListeners;

@@ -1,6 +1,6 @@
 package cc.helium.module.impl.movement;
 
-import cc.helium.event.api.annotations.TargetEvent;
+import cc.helium.event.api.annotations.SubscribeEvent;
 import cc.helium.event.impl.update.UpdateEvent;
 import cc.helium.module.Category;
 import cc.helium.module.Module;
@@ -15,7 +15,7 @@ public class Sprint extends Module {
         super("Sprint", Keyboard.KEY_LCONTROL, Category.Movement);
     }
 
-    @TargetEvent
+    @SubscribeEvent
     public void onUpdate(UpdateEvent ignored) {
         if (mc.thePlayer == null) return;
 

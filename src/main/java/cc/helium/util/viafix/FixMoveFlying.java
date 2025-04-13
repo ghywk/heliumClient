@@ -1,6 +1,6 @@
 package cc.helium.util.viafix;
 
-import cc.helium.event.api.annotations.TargetEvent;
+import cc.helium.event.api.annotations.SubscribeEvent;
 import cc.helium.event.impl.packet.PacketSendEvent;
 import cc.helium.util.Util;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
@@ -15,7 +15,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 public class FixMoveFlying implements Util {
     private boolean lastGround;
 
-    @TargetEvent
+    @SubscribeEvent
     public void onPacketSend(PacketSendEvent event) {
         if (ViaLoadingBase.getInstance().getTargetVersion().newerThan(ProtocolVersion.v1_8)) {
             final Packet<?> packet = event.getPacket();

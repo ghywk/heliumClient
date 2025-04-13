@@ -17,6 +17,7 @@ public class MathHelper {
     private static final float radToIndex = MathUtils.roundToFloat(651.8986469044033D);
     public static final float deg2Rad = MathUtils.roundToFloat(0.017453292519943295D);
     private static final float[] SIN_TABLE_FAST = new float[4096];
+    public static final float TO_DEGREES = 180.0f / PI;
     public static boolean fastMath = false;
     private static final float[] SIN_TABLE = new float[65536];
     private static final int[] multiplyDeBruijnBitPosition;

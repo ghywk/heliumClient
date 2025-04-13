@@ -1,6 +1,10 @@
 package cc.helium.module;
 
+import cc.helium.module.impl.combat.KillAura;
+import cc.helium.module.impl.misc.AntiBot;
+import cc.helium.module.impl.misc.Teams;
 import cc.helium.module.impl.movement.Sprint;
+import cc.helium.module.impl.player.Disabler;
 import cc.helium.module.impl.render.BetterItem;
 import cc.helium.module.impl.render.ClickGUI;
 import cc.helium.module.impl.render.HUDModule;
@@ -71,6 +75,10 @@ public class ModuleManager implements Util {
         add(new ClickGUI());
         add(new HUDModule());
         add(new BetterItem());
+        add(new AntiBot());
+        add(new KillAura());
+        add(new Teams());
+        add(new Disabler());
 
         LogUtil.log_info("Module Loaded");
     }

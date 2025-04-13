@@ -23,12 +23,16 @@ public class UFontRenderer extends FontRenderer {
         boolean antiAlias = true;
         Font font;
         try {
-            InputStream is = FontManager.class.getResourceAsStream("/assets/minecraft/helium/font/" + name + ".ttf");
-            font = Font.createFont(0, is);
-            font = font.deriveFont(Font.PLAIN, size);
+            if (name.equalsIgnoreCase("Default")) {
+                font = new Font("Default", Font.PLAIN, size);
+            } else {
+                InputStream is = FontManager.class.getResourceAsStream("/assets/minecraft/helium/font/" + name + ".ttf");
+                font = Font.createFont(0, is);
+                font = font.deriveFont(Font.PLAIN, size);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
-            font = new Font("Arial", Font.PLAIN, size);
+            font = new Font("Default", Font.PLAIN, size);
         }
 
         ResourceLocation res = new ResourceLocation("textures/font/ascii.png");
